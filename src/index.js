@@ -10,6 +10,7 @@ const PORT = parseInt(process.env.PORT, 10) || 80;
 
 const testController = (req, res) => {
   const { body } = req;
+  console.log('=?=body=?>', body)
 
   const payload = {
     status: 'ok',
