@@ -1,15 +1,10 @@
 {
   "version": 2,
-  "name": "telegram-git-lab-push",
+  "name": "telegram",
   "builds": [
     {
       "src": "api/**/*.js",
       "use": "@now/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)"
     }
   ]
 }
