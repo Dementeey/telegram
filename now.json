@@ -3,7 +3,7 @@
   "name": "telegram",
   "builds": [
     {
-      "src": "api/**/*.js",
+      "src": "src/index.js",
       "use": "@now/node"
     }
   ]
