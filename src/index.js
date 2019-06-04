@@ -6,7 +6,7 @@ const router = express.Router();
 const app = express();
 
 const TOKEN = 'министерство_не_ваших_собачих_дел';
-const PORT = parseInt(process.env.PORT, 10) || 9000;
+const PORT = parseInt(process.env.PORT, 10) || 80;
 
 const testController = (req, res) => {
   const { body } = req;
@@ -22,7 +22,7 @@ const testController = (req, res) => {
   return res.status(201).send(payload);
 };
 
-router.post('/', testController);
+router.get('/', testController);
 
 app.use(cors());
 app.use(bodyParser.json());
