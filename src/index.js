@@ -11,6 +11,7 @@ const PREFIX = '/api';
 
 const testController = (req, res) => {
   const { body } = req;
+  console.log('=?=body=?>', body)
 
   const payload = {
     status: 'ok',
