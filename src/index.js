@@ -3,10 +3,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const moment = require('moment');
 const router = express.Router();
+const app = express();
 
+const TOKEN = 'министерство_не_ваших_собачих_дел';
 const PORT = parseInt(process.env.PORT, 10) || 9000;
 const PREFIX = '/api';
-const app = express();
 
 const testController = (req, res) => {
   const { body } = req;
