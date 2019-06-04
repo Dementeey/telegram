@@ -7,7 +7,6 @@ const app = express();
 
 const TOKEN = 'министерство_не_ваших_собачих_дел';
 const PORT = parseInt(process.env.PORT, 10) || 9000;
-const PREFIX = '/api';
 
 const testController = (req, res) => {
   const { body } = req;
@@ -23,11 +22,11 @@ const testController = (req, res) => {
   return res.status(201).send(payload);
 };
 
-router.post('/test', testController);
+router.post('/', testController);
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(PREFIX, router);
+app.use(router);
 app.use((req, res, next) => {
   console.log('Time: ', Date.now());
   next();
