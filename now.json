@@ -1,6 +1,15 @@
 {
   "version": 2,
   "name": "telegram",
+  "routes": [
+    {
+      "src": "src/**/*.js",
+      "methods": [
+        "POST",
+        "GET"
+      ]
+    }
+  ],
   "builds": [
     {
       "src": "src/**/*.js",

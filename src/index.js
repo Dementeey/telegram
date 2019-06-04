@@ -16,6 +16,7 @@ const testController = (req, res) => {
     status: 'ok',
     payload: [
       {
+        aa: 'ok',
         createdAt: moment().toISOString()
       }
     ]
@@ -23,7 +24,7 @@ const testController = (req, res) => {
   return res.status(201).send(payload);
 };
 
-router.get('/', testController);
+router.post('/', testController);
 
 app.use(cors());
 app.use(bodyParser.json());
