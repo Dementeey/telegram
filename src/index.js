@@ -27,15 +27,16 @@ const testController = async (req, res) => {
   console.log(headers);
   console.log('====================================');
 
-  const message = `
-    Тип: ${body.object_kind}
-    Событие: ${body.event_name}
-    Имя: ${body.user_name}
-    Username: ${body.user_username}
-    [Аватар](${body.user_avatar})
-    ----------------------------
-    ref: ${body.ref}
-  `;
+  const message = JSON.stringify(body);
+  // const message = `
+  //   Тип: ${body.object_kind}
+  //   Событие: ${body.event_name}
+  //   Имя: ${body.user_name}
+  //   Username: ${body.user_username}
+  //   [Аватар](${body.user_avatar})
+  //   ----------------------------
+  //   ref: ${body.ref}
+  // `;
 
   // *bold text*
   // _italic text_
