@@ -4,69 +4,46 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const moment = require('moment');
+const fetch = require('node-fetch');
 const router = express.Router();
 const app = express();
 
 const GIT_LAB_TOKEN = 'министерство_не_ваших_собачих_дел';
 
 const TELEGRAM_HOST = 'api.telegram.org';
-const TELEGRAM_CHANNEL = process.env.TELEGRAM_CHANNEL || '@git_lab_notifier';
+const TELEGRAM_CHANNEL = process.env.TELEGRAM_CHANNEL || '-1001325374489';
 const TELEGRAM_TOKEN =
   process.env.TELEGRAM_TOKEN || '628940363:AAFidkqan-HYJpJyvjKpDVcVHtX3OxT6w6s';
 const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHANNEL}&text=`;
 
-const sendMessage = data => {
-  console.log('============data=====================');
-  console.log(data);
-  console.log('====================================');
+const sendMessageFetch = msg => fetch(`${TELEGRAM_URL}${msg}`);
 
-  const message = JSON.stringify(data);
-
-  const options = {
-    host: TELEGRAM_HOST,
-    port: 443,
-    path: `/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHANNEL}&text=${message}`,
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  const port = options.port === 443 ? https : http;
-  const req = port.request(options, res => {
-    console.log('============response===============');
-    console.log(`${options.host} : ${res.statusCode}`);
-    console.log('==============END==================');
-  });
-
-  r;
-  req.on('error', error => {
-    console.log('=========REQUEST ERROR=============');
-    console.log(error);
-    console.log('=============END===================');
-  });
-
-  req.end(() => {
-    console.log('sendMessage end');
-  });
-};
-
-const testController = (req, res) => {
+const testController = async (req, res) => {
   const { body } = req;
 
+  let data;
+
+  try {
+    data = await sendMessageFetch(JSON.stringify(body)).then(r => r.json());
+  } catch (error) {
+    console.log('====err=================');
+    console.log(error.message);
+    console.log('=======end-err==========');
+  }
+  console.log('=============data;==================');
+  console.log('data', data);
+  console.log('====================================');
   const payload = {
     status: 'ok',
     payload: [
       {
         sended: moment().toISOString(),
-        body
+        body,
+        telegram: data
       }
     ]
   };
-  console.log('==================sendMessage(body);==================');
-  console.log('sendMessage(body);');
-  console.log('====================================');
-  sendMessage(body);
+
   return res.status(200).send(payload);
 };
 
