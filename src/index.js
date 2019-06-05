@@ -27,10 +27,41 @@ const testController = async (req, res) => {
   console.log(headers);
   console.log('====================================');
 
+  const message = `
+    Тип: ${body.object_kind}
+    Событие: ${body.event_name}
+    Имя: ${body.user_name}
+    Username: ${body.user_username}
+    [Аватар](${body.user_avatar})
+    ----------------------------
+    ref: ${body.ref}
+  `;
+
+  // *bold text*
+  // _italic text_
+  // [inline URL](http://www.example.com/)
+  // [inline mention of a user](tg://user?id=123456789)
+  // `inline fixed-width code`
+  // ```block_language
+  // pre-formatted fixed-width code block
+  // ```
+
+  // {
+  //   "before":"e2dafd06df77a343ebc3324c690bae50c911a66d",
+  //   "after":"dafb6b609d6112e6129097b1e8630f9d03da821e",
+  //   "ref":"refs/heads/master",
+  //   "checkout_sha":"dafb6b609d6112e6129097b1e8630f9d03da821e",
+  //   "user_id":4024677,
+  //   "user_name":"A. L.",
+  //   "user_username":"metallist9656",
+  //   "user_email":"",
+  //   "user_avatar":"https://secure.gravatar.com/avatar/43916ce158a8ed688b32901327e280c2?s=80"
+  // }
+
   let data;
 
   try {
-    data = await sendMessageFetch(JSON.stringify(body)).then(r => r.json());
+    data = await sendMessageFetch(message).then(r => r.json());
   } catch (error) {
     console.log('====err=================');
     console.log(error.message);
