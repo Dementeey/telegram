@@ -50,6 +50,7 @@ const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?
 //     console.log('sendMessage end');
 //   });
 // };
+const sendMessageAxios = () => axios.get(TELEGRAM_URL);
 
 const testController = async (req, res) => {
   const { body } = req;
@@ -73,8 +74,6 @@ const testController = async (req, res) => {
 
   return res.status(200).send(payload);
 };
-
-const sendMessageAxios = () => axios.get(TELEGRAM_URL);
 
 router.post('/send-message', testController);
 
