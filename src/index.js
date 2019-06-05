@@ -39,6 +39,7 @@ const sendMessage = data => {
     console.log('==============END==================');
   });
 
+  r;
   req.on('error', error => {
     console.log('=========REQUEST ERROR=============');
     console.log(error);
@@ -62,7 +63,9 @@ const testController = (req, res) => {
       }
     ]
   };
-
+  console.log('==================sendMessage(body);==================');
+  console.log('sendMessage(body);');
+  console.log('====================================');
   sendMessage(body);
   return res.status(200).send(payload);
 };
