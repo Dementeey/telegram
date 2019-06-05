@@ -7,8 +7,6 @@ const moment = require('moment');
 const router = express.Router();
 const app = express();
 
-const PORT = parseInt(process.env.PORT, 10) || 9000;
-
 const GIT_LAB_TOKEN = 'министерство_не_ваших_собачих_дел';
 
 const TELEGRAM_HOST = 'api.telegram.org';
@@ -75,8 +73,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(router);
 app.use((req, res, next) => {
-  console.log('Time: ', Date.now());
+  console.log('EXPRESS USE >>>> Time: ', moment().toISOString());
   next();
 });
 
-app.listen(PORT, () => console.log('HTTP server listening on port %s', PORT));
+app.listen();
