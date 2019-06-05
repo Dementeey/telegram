@@ -19,7 +19,13 @@ const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?
 const sendMessageFetch = msg => fetch(`${TELEGRAM_URL}${msg}`);
 
 const testController = async (req, res) => {
-  const { body } = req;
+  const { body, headers } = req;
+
+  console.log('============body====================');
+  console.log(body);
+  console.log('======headers=======================');
+  console.log(headers);
+  console.log('====================================');
 
   let data;
 
