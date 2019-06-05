@@ -54,12 +54,16 @@ const sendMessageAxios = () => axios.get(TELEGRAM_URL);
 
 const testController = async (req, res) => {
   const { body } = req;
-  console.log('=======1111111===========sendMessage(body);==================');
-  console.log('sendMessage(body)1;');
+  console.log(
+    '=======1111111===========sendMessageAxios(body);=================='
+  );
+  console.log('sendMessageAxios');
   console.log('====================================');
-  const { data } = await sendMessage(body);
-  console.log('=========22222222=========sendMessage(body);==================');
-  console.log('sendMessage(body);');
+  const { data } = await sendMessageAxios(body);
+  console.log(
+    '=========22222222=========sendMessageAxios(body);=================='
+  );
+  console.log('sendMessageAxios');
   console.log('====================================');
   const payload = {
     status: 'ok',
@@ -85,4 +89,4 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen();
+app.listen(9000);
