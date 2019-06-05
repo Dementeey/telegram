@@ -4,31 +4,29 @@ const bodyParser = require('body-parser');
 const moment = require('moment');
 const router = express.Router();
 const app = express();
+const sendMessage = require('./sendMessage');
 
 const TOKEN = 'министерство_не_ваших_собачих_дел';
 const PORT = parseInt(process.env.PORT, 10) || 9000;
 
 const testController = (req, res) => {
   const { body } = req;
-  console.log('=?=body=?>', body);
 
   const payload = {
     status: 'ok',
     payload: [
       {
-        aa: 'ok',
-        createdAt: moment().toISOString()
+        sended: moment().toISOString(),
+        body
       }
     ]
   };
-  return res.status(201).send(payload);
+
+  sendMessage(body);
+  return res.status(200).send(payload);
 };
 
-router.post('/test', testController);
-
-app.post('/post', function(request, response) {
-  response.send(request.body);
-});
+router.post('/send-message', testController);
 
 app.use(cors());
 app.use(bodyParser.json());
