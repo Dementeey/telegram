@@ -24,7 +24,11 @@ const testController = (req, res) => {
   return res.status(201).send(payload);
 };
 
-router.post('/', testController);
+router.post('/test', testController);
+
+app.post('/post', function(request, response) {
+  response.send(request.body);
+});
 
 app.use(cors());
 app.use(bodyParser.json());
