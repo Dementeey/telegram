@@ -7,22 +7,32 @@ const moment = require('moment');
 const router = express.Router();
 const app = express();
 
-const TOKEN = 'министерство_не_ваших_собачих_дел';
 const PORT = parseInt(process.env.PORT, 10) || 9000;
 
-const options = {
-  host: 'jsonplaceholder.typicode.com',
-  port: 80,
-  path: '/posts/1',
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-};
+const GIT_LAB_TOKEN = 'министерство_не_ваших_собачих_дел';
+
+const TELEGRAM_HOST = 'api.telegram.org';
+const TELEGRAM_CHANNEL = process.env.TELEGRAM_CHANNEL || '@git_lab_notifier';
+const TELEGRAM_TOKEN =
+  process.env.TELEGRAM_TOKEN || '628940363:AAFidkqan-HYJpJyvjKpDVcVHtX3OxT6w6s';
+const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHANNEL}&text=`;
+
 const sendMessage = data => {
   console.log('============data=====================');
   console.log(data);
   console.log('====================================');
+
+  const message = JSON.stringify(data);
+
+  const options = {
+    host: TELEGRAM_HOST,
+    port: 443,
+    path: `/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHANNEL}&text=${message}`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
   const port = options.port === 443 ? https : http;
   const req = port.request(options, res => {
@@ -37,7 +47,9 @@ const sendMessage = data => {
     console.log('=============END===================');
   });
 
-  req.end();
+  req.end(() => {
+    console.log('sendMessage end');
+  });
 };
 
 const testController = (req, res) => {
