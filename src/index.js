@@ -18,7 +18,7 @@ const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?
 
 const sendMessageFetch = msg => fetch(`${TELEGRAM_URL}${msg}`);
 
-const testController = async (req, res) => {
+const textController = async (req, res) => {
   const { body } = req;
   
   // const message = JSON.stringify(body);
@@ -58,8 +58,10 @@ const testController = async (req, res) => {
   let data;
 
   try {
-    data = await sendMessageFetch(message).then(r => r.json());
+    await sendMessageFetch(message)
+    data = 'Ok'
   } catch (error) {
+    data = 'Error'
     console.log('====err=================');
     console.log(error.message);
     console.log('=======end-err==========');
@@ -81,13 +83,13 @@ const testController = async (req, res) => {
   return res.status(200).send(payload);
 };
 
-router.post('/send-message', testController);
+router.post('/send-message', textController);
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(router);
 app.use((req, res, next) => {
-  console.log('EXPRESS USE >>>> Time: ', moment().toISOString());
+  console.log('EXPRESS USE Time: ', moment().toISOString());
   next();
 });
 
