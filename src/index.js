@@ -19,24 +19,26 @@ const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?
 const sendMessageFetch = msg => fetch(`${TELEGRAM_URL}${msg}`);
 
 const testController = async (req, res) => {
-  const { body, headers } = req;
+  // const { body, headers } = req;
 
-  console.log('============body====================');
-  console.log(body);
-  console.log('======headers=======================');
-  console.log(headers);
-  console.log('====================================');
+  // console.log('============body====================');
+  // console.log(body);
+  // console.log('======headers=======================');
+  // console.log(headers);
+  // console.log('====================================');
 
-  const message = JSON.stringify(body);
-  // const message = `
-  //   Тип: ${body.object_kind}
-  //   Событие: ${body.event_name}
-  //   Имя: ${body.user_name}
-  //   Username: ${body.user_username}
-  //   [Аватар](${body.user_avatar})
-  //   ----------------------------
-  //   ref: ${body.ref}
-  // `;
+  
+  // const message = JSON.stringify(body);
+  console.log('body ===>', body, '<=== body');
+  const message = `
+    Тип: ${body.object_kind}
+    Событие: ${body.event_name}
+    Имя: ${body.user_name}
+    Username: ${body.user_username}
+    [Аватар](${body.user_avatar})
+    ----------------------------
+    ref: ${body.ref}
+  `;
 
   // *bold text*
   // _italic text_
