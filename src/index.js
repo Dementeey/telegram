@@ -18,9 +18,23 @@ const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?
 
 const sendMessageFetch = msg => fetch(`${TELEGRAM_URL}${msg}`);
 
+const parserGitLabWebhook = data => ({
+  eventName: data.event_name,
+  user: {
+    name: data.user_name,
+    avatar: data.user_avatar,
+  },
+  project: {
+    name: data.project.name,
+    url: data.project.web_url,
+  },
+  commits: data.commits,
+  sshUrl: data.repository.git_ssh_url
+})
+
 const textController = async (req, res) => {
   const { body } = req;
-  
+
   // const message = JSON.stringify(body);
   console.log('body ===>', body, '<=== body');
   const message = `
