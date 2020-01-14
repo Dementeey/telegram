@@ -10,6 +10,7 @@ const app = express();
 const { API, TELEGRAM_CHANNEL } = require('./config')
 
 const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&text=${msg}`);
+const sendMessageFetch2 = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&parse_mode=markdown&text=${msg}`);
 
 const parserGitLabWebhook = data => {
   const formatData = {
@@ -26,13 +27,15 @@ const parserGitLabWebhook = data => {
     sshUrl: data.repository.git_ssh_url
   }
 
-  return 'Событие: ' + formatData.eventName + '\n' +
-    "Имя: " + formatData.user.name + "\n" +
-    "----------------------------\n" +
-    "Проект: " + formatData.project.name + "\n" +
-    "[Ссылка](" + formatData.project.url + ")" + "\n" +
-    "----------------------------\n" +
-    "Комиты: " + formatData.commits.length
+  return
+  //  'Событие\: ' +
+  formatData.eventName + '\n'
+  // "Имя\: " + formatData.user.name + "\n" +
+  // "\n" +
+  // "Проект\: " + formatData.project.name + "\n" +
+  // "\[Ссылка\]\(" + formatData.project.url + "\)" + "\n" +
+  // "\n" +
+  // "Комиты\: " + formatData.commits.length
 
 }
 
@@ -40,18 +43,23 @@ const textController = async (req, res) => {
   let telegramStatus
 
   const { body } = req;
+  const text = parserGitLabWebhook(body)
   console.log('api', API)
   console.log('TELEGRAM_CHANNEL', TELEGRAM_CHANNEL)
+  console.log('text', text)
   try {
-    await fetch(API.SEND_MESSAGE, {
+    const fetchResponse = await fetch(API.SEND_MESSAGE, {
       method: "POST",
-      body: {
+      body: JSON.stringify({
         chat_id: TELEGRAM_CHANNEL,
-        text: parserGitLabWebhook(body),
-        parse_mode: 'markdown',
-      }
+        text: text,
+        // parse_mode: 'markdown',
+      })
     })
+    const secondFRes = await sendMessageFetch2(text)
 
+    console.log('fetchResponse', fetchResponse)
+    console.log('secondFRes', secondFRes)
     telegramStatus = 'ok'
 
   } catch (error) {
@@ -83,4 +91,4 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen();
+app.listen(3000);
