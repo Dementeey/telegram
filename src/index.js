@@ -7,16 +7,9 @@ const moment = require('moment');
 const fetch = require('node-fetch');
 const router = express.Router();
 const app = express();
+const { API, TELEGRAM_CHANNEL } = require('./config')
 
-const GIT_LAB_TOKEN = 'министерство_не_ваших_собачих_дел';
-
-const TELEGRAM_HOST = 'api.telegram.org';
-const TELEGRAM_CHANNEL = process.env.TELEGRAM_CHANNEL || '-1001325374489';
-const TELEGRAM_TOKEN =
-  process.env.TELEGRAM_TOKEN || '628940363:AAFidkqan-HYJpJyvjKpDVcVHtX3OxT6w6s';
-const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHANNEL}&parse_mode='Markdown'&text=`;
-
-const sendMessageFetch = msg => fetch(`${TELEGRAM_URL}${msg}`);
+const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&text=${msg}`);
 
 const parserGitLabWebhook = data => {
   const formatData = {
@@ -36,15 +29,25 @@ const parserGitLabWebhook = data => {
   return `
     Событие: ${formatData.eventName}\n
     Имя: ${formatData.user.name}\n
-    [Аватар](${formatData.user.avatar})\n
     ----------------------------\n
-    \n
     Проект: ${formatData.project.name}\n
     [Ссылка](${formatData.project.url})\n
     ----------------------------\n
-    \n
     Комиты: ${formatData.commits.length}
   `;
+}
+
+const sendMessage = (data) => {
+  const text = parserGitLabWebhook(data)
+  console.log('message ==>', text, '<== message')
+  return fetch(API.SEND_MESSAGE, {
+    method: "POST",
+    body: {
+      chat_id: TELEGRAM_CHANNEL,
+      text,
+      parse_mode: 'Markdown',
+    }
+  })
 }
 
 const textController = async (req, res) => {
@@ -77,9 +80,7 @@ const textController = async (req, res) => {
   let data;
 
   try {
-    const msg = parserGitLabWebhook(body)
-    console.log('message ==>', msg, '<== message')
-    await sendMessageFetch(msg)
+    await sendMessage(body)
   } catch (error) {
     data = 'Error'
 
