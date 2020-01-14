@@ -14,7 +14,7 @@ const TELEGRAM_HOST = 'api.telegram.org';
 const TELEGRAM_CHANNEL = process.env.TELEGRAM_CHANNEL || '-1001325374489';
 const TELEGRAM_TOKEN =
   process.env.TELEGRAM_TOKEN || '628940363:AAFidkqan-HYJpJyvjKpDVcVHtX3OxT6w6s';
-const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHANNEL}&text=`;
+const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHANNEL}&parse_mode='Markdown'&text=`;
 
 const sendMessageFetch = msg => fetch(`${TELEGRAM_URL}${msg}`);
 
