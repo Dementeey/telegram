@@ -72,13 +72,15 @@ const textController = async (req, res) => {
   let data;
 
   try {
-    await sendMessageFetch(message)
+    await sendMessageFetch(parserGitLabWebhook(body))
     data = 'Ok'
+    await sendMessageFetch(data)
   } catch (error) {
     data = 'Error'
     console.log('====err=================');
     console.log(error.message);
     console.log('=======end-err==========');
+    await sendMessageFetch(data)
   }
   console.log('=============data;==================');
   console.log('data', data);
