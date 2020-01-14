@@ -46,18 +46,11 @@ const textController = async (req, res) => {
       body: {
         chat_id: TELEGRAM_CHANNEL,
         text: parserGitLabWebhook(body),
-        parse_mode: 'Markdown',
+        parse_mode: 'markdown',
       }
     })
   } catch (error) {
     console.log('error =>>', error.message, '<<= error')
-
-    try {
-      await sendMessageFetch('Error')
-      await sendMessageFetch(error.message)
-    } catch (error) {
-      console.log('second error =>>', error.message, '<<= second error')
-    }
   }
 
 
