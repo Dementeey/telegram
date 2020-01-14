@@ -18,35 +18,40 @@ const TELEGRAM_URL = `https://${TELEGRAM_HOST}/bot${TELEGRAM_TOKEN}/sendMessage?
 
 const sendMessageFetch = msg => fetch(`${TELEGRAM_URL}${msg}`);
 
-const parserGitLabWebhook = data => ({
-  eventName: data.event_name,
-  user: {
-    name: data.user_name,
-    avatar: data.user_avatar,
-  },
-  project: {
-    name: data.project.name,
-    url: data.project.web_url,
-  },
-  commits: data.commits,
-  sshUrl: data.repository.git_ssh_url
-})
+const parserGitLabWebhook = data => {
+  const formatData = {
+    eventName: data.event_name,
+    user: {
+      name: data.user_name,
+      avatar: data.user_avatar,
+    },
+    project: {
+      name: data.project.name,
+      url: data.project.web_url,
+    },
+    commits: data.commits,
+    sshUrl: data.repository.git_ssh_url
+  }
+
+  return `
+    Событие: ${formatData.eventName}\n
+    Имя: ${formatData.user.name}\n
+    [Аватар](${formatData.user.avatar})\n
+    ----------------------------\n
+    \n
+    Проект: ${formatData.project.name}\n
+    [Ссылка](${formatData.project.url})\n
+    ----------------------------\n
+    \n
+    Комиты: ${formatData.commits.length}
+  `;
+}
 
 const textController = async (req, res) => {
   const { body } = req;
 
   // const message = JSON.stringify(body);
   console.log('body ===>', body, '<=== body');
-  const message = `
-    Событие: ${body.event_name}
-    Имя: ${body.user_name}
-    [Аватар](${body.user_avatar})
-    ----------------------------
-    Проект: ${body.project.name} [Link](${body.project.http_url})
-    Ref: ${body.ref}
-
-    commits count: ${body.commits.length}
-  `;
 
   // *bold text*
   // _italic text_
@@ -73,18 +78,13 @@ const textController = async (req, res) => {
 
   try {
     await sendMessageFetch(parserGitLabWebhook(body))
-    data = 'Ok'
-    await sendMessageFetch(data)
   } catch (error) {
     data = 'Error'
-    console.log('====err=================');
-    console.log(error.message);
-    console.log('=======end-err==========');
+
     await sendMessageFetch(data)
+    await sendMessageFetch(error.message)
   }
-  console.log('=============data;==================');
-  console.log('data', data);
-  console.log('====================================');
+
   const payload = {
     status: 'ok',
     payload: [
