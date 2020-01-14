@@ -37,6 +37,8 @@ const parserGitLabWebhook = data => {
 }
 
 const textController = async (req, res) => {
+  let telegramStatus
+
   const { body } = req;
   console.log('api', API)
   console.log('TELEGRAM_CHANNEL', TELEGRAM_CHANNEL)
@@ -49,23 +51,24 @@ const textController = async (req, res) => {
         parse_mode: 'markdown',
       }
     })
+
+    telegramStatus = 'ok'
   } catch (error) {
+    telegramStatus = 'Error'
     console.log('error =>>', error.message, '<<= error')
   }
 
 
-  const payload = {
+  return res.status(200).send({
     status: 'ok',
     payload: [
       {
         sended: moment().toISOString(),
         body,
-        telegram: data
+        telegram: telegramStatus
       }
     ]
-  };
-
-  return res.status(200).send(payload);
+  });
 };
 
 router.post('/send-message', textController);
