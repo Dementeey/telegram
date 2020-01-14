@@ -53,11 +53,13 @@ const textController = async (req, res) => {
     })
 
     telegramStatus = 'ok'
+
   } catch (error) {
     telegramStatus = 'Error'
     console.log('error =>>', error.message, '<<= error')
   }
 
+  console.log('telegramStatus', telegramStatus)
 
   return res.status(200).send({
     status: 'ok',
