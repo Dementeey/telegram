@@ -77,7 +77,9 @@ const textController = async (req, res) => {
   let data;
 
   try {
-    await sendMessageFetch(parserGitLabWebhook(body))
+    const msg = parserGitLabWebhook(body)
+    console.log('message ==>', msg, '<== message')
+    await sendMessageFetch(msg)
   } catch (error) {
     data = 'Error'
 
