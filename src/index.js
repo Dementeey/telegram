@@ -8,8 +8,7 @@ const fetch = require('node-fetch');
 const router = express.Router();
 const app = express();
 const { API, TELEGRAM_CHANNEL } = require('./config')
-console.log('api', API)
-console.log('TELEGRAM_CHANNEL', TELEGRAM_CHANNEL)
+
 const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&text=${msg}`);
 
 const parserGitLabWebhook = data => {
@@ -39,8 +38,8 @@ const parserGitLabWebhook = data => {
 
 const textController = async (req, res) => {
   const { body } = req;
-  console.log('body ===>', body, '<=== body');
-
+  console.log('api', API)
+  console.log('TELEGRAM_CHANNEL', TELEGRAM_CHANNEL)
   try {
     await fetch(API.SEND_MESSAGE, {
       method: "POST",
@@ -51,11 +50,16 @@ const textController = async (req, res) => {
       }
     })
   } catch (error) {
-    await sendMessageFetch('Error')
-    await sendMessageFetch(error.message)
-
     console.log('error =>>', error.message, '<<= error')
+
+    try {
+      await sendMessageFetch('Error')
+      await sendMessageFetch(error.message)
+    } catch (error) {
+      console.log('second error =>>', error.message, '<<= second error')
+    }
   }
+
 
   const payload = {
     status: 'ok',
