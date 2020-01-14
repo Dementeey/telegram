@@ -8,7 +8,8 @@ const fetch = require('node-fetch');
 const router = express.Router();
 const app = express();
 const { API, TELEGRAM_CHANNEL } = require('./config')
-
+console.log('api', API)
+console.log('TELEGRAM_CHANNEL', TELEGRAM_CHANNEL)
 const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&text=${msg}`);
 
 const parserGitLabWebhook = data => {
@@ -26,15 +27,14 @@ const parserGitLabWebhook = data => {
     sshUrl: data.repository.git_ssh_url
   }
 
-  return `
-    Событие: ${formatData.eventName}\n
-    Имя: ${formatData.user.name}\n
-    ----------------------------\n
-    Проект: ${formatData.project.name}\n
-    [Ссылка](${formatData.project.url})\n
-    ----------------------------\n
-    Комиты: ${formatData.commits.length}
-  `;
+  return 'Событие: ' + formatData.eventName + '\n' +
+    "Имя: " + formatData.user.name + "\n" +
+    "----------------------------\n" +
+    "Проект: " + formatData.project.name + "\n" +
+    "[Ссылка](" + formatData.project.url + ")" + "\n" +
+    "----------------------------\n" +
+    "Комиты: " + formatData.commits.length
+
 }
 
 const sendMessage = (data) => {
@@ -60,7 +60,7 @@ const textController = async (req, res) => {
   // _italic text_
   // [inline URL](http://www.example.com/)
   // [inline mention of a user](tg://user?id=123456789)
-  // `inline fixed-width code`
+  // `inline fixed - width code`
   // ```block_language
   // pre-formatted fixed-width code block
   // ```
