@@ -56,9 +56,11 @@ ${formatData.commits.length > 0 ? formatData.commits.reduce((init, item,index) =
 }
 
 const textController = async (req, res) => {
+  const { body } = req
   let telegramStatus
+
   try {
-    await sendMessageFetch2(parserGitLabWebhook(req.body))
+    await sendMessageFetch2(parserGitLabWebhook(body))
     telegramStatus = 'ok'
   } catch (error) {
     telegramStatus = 'Error'
