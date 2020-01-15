@@ -9,8 +9,11 @@ const router = express.Router();
 const app = express();
 const { API, TELEGRAM_CHANNEL } = require('./config')
 
+const disableWebPreview = true;
+const disableNotification = false;
+
 const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&text=${msg}`);
-const sendMessageFetch2 = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&disable_web_page_preview=true&disable_notification=true&parse_mode=markdown&text=${msg}`);
+const sendMessageFetch2 = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&disable_web_page_preview=${disableWebPreview}&disable_notification=${disableNotification}&parse_mode=markdown&text=${msg}`);
 
 const parserGitLabWebhook = data => {
   const formatData = {
