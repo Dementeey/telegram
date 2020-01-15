@@ -10,7 +10,7 @@ const app = express();
 const { API, TELEGRAM_CHANNEL } = require('./config')
 
 const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&text=${msg}`);
-const sendMessageFetch2 = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&parse_mode=markdown&text=${msg}`);
+const sendMessageFetch2 = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&disable_web_page_preview=true&disable_notification=true&parse_mode=markdown&text=${msg}`);
 
 const parserGitLabWebhook = data => {
   const formatData = {
@@ -27,41 +27,36 @@ const parserGitLabWebhook = data => {
     sshUrl: data.repository.git_ssh_url
   }
 
-  return
-  //  'Событие\: ' +
-  formatData.eventName + '\n'
-  // "Имя\: " + formatData.user.name + "\n" +
-  // "\n" +
-  // "Проект\: " + formatData.project.name + "\n" +
-  // "\[Ссылка\]\(" + formatData.project.url + "\)" + "\n" +
-  // "\n" +
-  // "Комиты\: " + formatData.commits.length
-
+  return encodeURI(`Проект: ${formatData.project.name} 
+Ссылка: [${formatData.project.url}](${formatData.project.url})
+---------------------------
+Событие: ${formatData.eventName}
+Имя: ${formatData.user.name}
+Колл. Комитов: + ${formatData.commits.length}
+${formatData.commits.length > 0 ? formatData.commits.reduce((init, item,index) => {
+   init += `
+    Коммит: ${index + 1}:
+    ================================================
+      \t кто: ${item.author.name}
+      \t когда: ${moment(item.timestamp)}
+      \t что сказал: ${item.message}
+      \t сколько добавил: ${item.added.length}
+      \t сколько изменил: ${item.modified.length}
+      \t сколько удалил: ${item.removed.length}
+      \t на сам посмотри: [${item.id.slice(0,9)}](${item.url})
+    ================================================
+    `
+    
+    return init
+  }, '') : ''}
+`)
 }
 
 const textController = async (req, res) => {
   let telegramStatus
-
-  const { body } = req;
-  const text = parserGitLabWebhook(body)
-  console.log('api', API)
-  console.log('TELEGRAM_CHANNEL', TELEGRAM_CHANNEL)
-  console.log('text', text)
   try {
-    const fetchResponse = await fetch(API.SEND_MESSAGE, {
-      method: "POST",
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHANNEL,
-        text: text,
-        // parse_mode: 'markdown',
-      })
-    })
-    const secondFRes = await sendMessageFetch2(text)
-
-    console.log('fetchResponse', fetchResponse)
-    console.log('secondFRes', secondFRes)
+    await sendMessageFetch2(parserGitLabWebhook(req.body))
     telegramStatus = 'ok'
-
   } catch (error) {
     telegramStatus = 'Error'
     console.log('error =>>', error.message, '<<= error')
