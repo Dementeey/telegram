@@ -1,3 +1,52 @@
+const WEB_HOOK_GITHAB = {
+  commits: [
+    {
+      id: 'fc44af1d38292a1c37265728e3e3daa512d33d6a',
+      tree_id: 'f8bbd3704ba5288efccece6680765285f9850eee',
+      distinct: true,
+      message: 'Update: Finish Step 1 on Tour of Heroes App',
+      timestamp: '2020-01-28T07:25:30+02:00',
+      url: 'https://github.com/Dementeey/home-cloud-frontend/commit/fc44af1d38292a1c37265728e3e3daa512d33d6a',
+      author: [],
+      committer: [],
+      added: [],
+      removed: [],
+      modified: []
+    }
+  ],
+  head_commit: {
+    id: 'fc44af1d38292a1c37265728e3e3daa512d33d6a',
+    tree_id: 'f8bbd3704ba5288efccece6680765285f9850eee',
+    distinct: true,
+    message: 'Update: Finish Step 1 on Tour of Heroes App',
+    timestamp: '2020-01-28T07:25:30+02:00',
+    url: 'https://github.com/Dementeey/home-cloud-frontend/commit/fc44af1d38292a1c37265728e3e3daa512d33d6a',
+    author: {
+      name: 'Anton L',
+      email: 'metallist9656@gmail.com',
+      username: 'Dementeey'
+    },
+    committer: {
+      name: 'Anton L',
+      email: 'metallist9656@gmail.com',
+      username: 'Dementeey'
+    },
+    added: [
+      'src/app/hero.ts',
+      'src/app/heroes/heroes.component.html',
+      'src/app/heroes/heroes.component.scss',
+      'src/app/heroes/heroes.component.spec.ts',
+      'src/app/heroes/heroes.component.ts'
+    ],
+    removed: [],
+    modified: [
+      'src/app/app.component.html',
+      'src/app/app.component.ts',
+      'src/app/app.module.ts'
+    ]
+  }
+}
+
 const WEB_HOOK_GITLAB = {
   object_kind: 'push',
   event_name: 'push',

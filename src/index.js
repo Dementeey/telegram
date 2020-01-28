@@ -39,11 +39,11 @@ ${formatData.commits.length > 0 ? formatData.commits.reduce((init, item, index) 
 }, '') : ''}
 `)
 
+// Git Lab
 const parserGitLabWebhook = data => messageFormatter({
   eventName: data.event_name,
   user: {
     name: data.user_name,
-    avatar: data.user_avatar,
   },
   project: {
     name: data.project.name,
@@ -53,9 +53,24 @@ const parserGitLabWebhook = data => messageFormatter({
   sshUrl: data.repository.git_ssh_url
 })
 
+// Git Hab
+const parserGitHabWebhook = data => messageFormatter({
+  eventName: data.event_name,
+  user: {
+    name: data.user_name,
+  },
+  project: {
+    name: data.repository.name,
+    url: data.repository.url,
+  },
+  commits: data.commits,
+  sshUrl: data.repository.git_ssh_url
+})
+
 const textController = async (req, res) => {
   const { body, headers, header } = req
   let telegramStatus
+  let telegramError
 
   try {
     await sendMessageFetch(parserGitLabWebhook(body))
@@ -65,15 +80,17 @@ const textController = async (req, res) => {
     console.log('error =>>', error.message, '<<= error')
 
     telegramStatus = 'Error'
+    telegramError = error
   }
 
+  console.log('body.commits ===>', body.commits, '<------ body.commits')
   console.log('header ===>', header, '<------ header')
   console.log('headers ===>', headers, '<------ headers')
-  console.log('body ===>', body, '<------ body')
   console.log('telegramStatus', telegramStatus)
 
   return res.status(200).send({
-    status: telegramStatus
+    status: telegramStatus,
+    error: telegramError
   });
 };
 
