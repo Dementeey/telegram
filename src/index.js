@@ -10,10 +10,9 @@ const app = express();
 const { API, TELEGRAM_CHANNEL } = require('./config')
 
 const disableWebPreview = true;
-const disableNotification = false;
+const disableNotification = true;
 
-const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&text=${msg}`);
-const sendMessageFetch2 = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&disable_web_page_preview=${disableWebPreview}&disable_notification=${disableNotification}&parse_mode=markdown&text=${msg}`);
+const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&disable_web_page_preview=${disableWebPreview}&disable_notification=${disableNotification}&parse_mode=markdown&text=${msg}`);
 
 const parserGitLabWebhook = data => {
   const formatData = {
@@ -36,8 +35,8 @@ const parserGitLabWebhook = data => {
 Событие: ${formatData.eventName}
 Имя: ${formatData.user.name}
 Колл. Комитов: + ${formatData.commits.length}
-${formatData.commits.length > 0 ? formatData.commits.reduce((init, item,index) => {
-   init += `
+${formatData.commits.length > 0 ? formatData.commits.reduce((init, item, index) => {
+    init += `
     Коммит: ${index + 1}:
     ================================================
       \t кто: ${item.author.name}
@@ -46,38 +45,36 @@ ${formatData.commits.length > 0 ? formatData.commits.reduce((init, item,index) =
       \t сколько добавил: ${item.added.length}
       \t сколько изменил: ${item.modified.length}
       \t сколько удалил: ${item.removed.length}
-      \t на сам посмотри: [${item.id.slice(0,9)}](${item.url})
+      \t на сам посмотри: [${item.id.slice(0, 9)}](${item.url})
     ================================================
     `
-    
+
     return init
   }, '') : ''}
 `)
 }
 
 const textController = async (req, res) => {
-  const { body } = req
+  const { body, headers, header } = req
   let telegramStatus
 
   try {
-    await sendMessageFetch2(parserGitLabWebhook(body))
+    await sendMessageFetch(parserGitLabWebhook(body))
+
     telegramStatus = 'ok'
   } catch (error) {
-    telegramStatus = 'Error'
     console.log('error =>>', error.message, '<<= error')
+
+    telegramStatus = 'Error'
   }
 
+  console.log('header ===>', header, '<------ header')
+  console.log('headers ===>', headers, '<------ headers')
+  console.log('body ===>', body, '<------ body')
   console.log('telegramStatus', telegramStatus)
 
   return res.status(200).send({
-    status: 'ok',
-    payload: [
-      {
-        sended: moment().toISOString(),
-        body,
-        telegram: telegramStatus
-      }
-    ]
+    status: telegramStatus
   });
 };
 
