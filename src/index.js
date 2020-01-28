@@ -14,29 +14,15 @@ const disableNotification = true;
 
 const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&disable_web_page_preview=${disableWebPreview}&disable_notification=${disableNotification}&parse_mode=markdown&text=${msg}`);
 
-const parserGitLabWebhook = data => {
-  const formatData = {
-    eventName: data.event_name,
-    user: {
-      name: data.user_name,
-      avatar: data.user_avatar,
-    },
-    project: {
-      name: data.project.name,
-      url: data.project.web_url,
-    },
-    commits: data.commits,
-    sshUrl: data.repository.git_ssh_url
-  }
 
-  return encodeURI(`Проект: ${formatData.project.name} 
+const messageFormatter = formatData => encodeURI(`Проект: ${formatData.project.name} 
 Ссылка: [${formatData.project.url}](${formatData.project.url})
 ---------------------------
 Событие: ${formatData.eventName}
 Имя: ${formatData.user.name}
 Колл. Комитов: + ${formatData.commits.length}
 ${formatData.commits.length > 0 ? formatData.commits.reduce((init, item, index) => {
-    init += `
+  init += `
     Коммит: ${index + 1}:
     ================================================
       \t кто: ${item.author.name}
@@ -49,10 +35,23 @@ ${formatData.commits.length > 0 ? formatData.commits.reduce((init, item, index) 
     ================================================
     `
 
-    return init
-  }, '') : ''}
+  return init
+}, '') : ''}
 `)
-}
+
+const parserGitLabWebhook = data => messageFormatter({
+  eventName: data.event_name,
+  user: {
+    name: data.user_name,
+    avatar: data.user_avatar,
+  },
+  project: {
+    name: data.project.name,
+    url: data.project.web_url,
+  },
+  commits: data.commits,
+  sshUrl: data.repository.git_ssh_url
+})
 
 const textController = async (req, res) => {
   const { body, headers, header } = req
