@@ -10,7 +10,7 @@ const app = express();
 const { API, TELEGRAM_CHANNEL } = require('./config')
 
 const disableWebPreview = true;
-const disableNotification = true;
+const disableNotification = false;
 
 const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CHANNEL}&disable_web_page_preview=${disableWebPreview}&disable_notification=${disableNotification}&parse_mode=markdown&text=${msg}`);
 
@@ -20,7 +20,7 @@ const messageFormatter = formatData => encodeURI(`Проект: ${formatData.pro
 SSH: ${formatData.sshUrl}
 ---------------------------
 Событие: ${formatData.eventName}
-Имя: ${formatData.user.name}
+${formatData.user.name ? `Имя: ${formatData.user.name}` : ''}
 ${formatData.commits.length > 0 ? `Колл. Комитов: + ${formatData.commits.length}` : ''}
 ${formatData.commits.length > 0 ? formatData.commits.reduce((init, item, index) => {
   init += `
