@@ -58,7 +58,7 @@ const parserGitLabWebhook = data => messageFormatter({
 const parserGitHabWebhook = (data, eventName) => messageFormatter({
   eventName,
   user: {
-    name: data.user_name,
+    name: data.repository.owner.name,
   },
   project: {
     name: data.repository.name,
