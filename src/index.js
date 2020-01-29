@@ -17,11 +17,11 @@ const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CH
 
 const messageFormatter = formatData => encodeURI(`Проект: ${formatData.project.name} 
 Ссылка: [${formatData.project.url}](${formatData.project.url})
-SSH: [${formatData.project.url}](${formatData.sshUrl})
+SSH: ${formatData.sshUrl}
 ---------------------------
 Событие: ${formatData.eventName}
 Имя: ${formatData.user.name}
-Колл. Комитов: + ${formatData.commits.length}
+${formatData.commits.length > 0 ? `Колл. Комитов: + ${formatData.commits.length}` : ''}
 ${formatData.commits.length > 0 ? formatData.commits.reduce((init, item, index) => {
   init += `
     Коммит: ${index + 1}:
@@ -50,7 +50,7 @@ const parserGitLabWebhook = data => messageFormatter({
     name: data.project.name,
     url: data.project.web_url,
   },
-  commits: data.commits,
+  commits: data.commits || [],
   sshUrl: data.repository.git_ssh_url
 })
 
@@ -64,7 +64,7 @@ const parserGitHabWebhook = (data, eventName) => messageFormatter({
     name: data.repository.name,
     url: data.repository.url,
   },
-  commits: data.commits,
+  commits: data.commits || [],
   sshUrl: data.repository.ssh_url
 })
 
