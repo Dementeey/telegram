@@ -76,6 +76,8 @@ const textController = async (req, res) => {
   try {
 
     if (headers['user-agent'].includes('GitHub-Hookshot')) {
+      console.log('>>> GitHub-Hookshot <<<')
+
       await sendMessageFetch(parserGitHabWebhook(body, headers['x-github-event']))
     } else {
       await sendMessageFetch(parserGitLabWebhook(body))
@@ -89,9 +91,6 @@ const textController = async (req, res) => {
     telegramError = error
   }
 
-  console.log('body.commits ===>', body.commits, '<------ body.commits')
-  console.log('header ===>', header, '<------ header')
-  console.log('headers ===>', headers, '<------ headers')
   console.log('telegramStatus', telegramStatus)
 
   return res.status(200).send({
