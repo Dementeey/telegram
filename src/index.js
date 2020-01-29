@@ -17,6 +17,7 @@ const sendMessageFetch = msg => fetch(`${API.SEND_MESSAGE}?chat_id=${TELEGRAM_CH
 
 const messageFormatter = formatData => encodeURI(`Проект: ${formatData.project.name} 
 Ссылка: [${formatData.project.url}](${formatData.project.url})
+SSH: [${formatData.project.url}](${formatData.sshUrl})
 ---------------------------
 Событие: ${formatData.eventName}
 Имя: ${formatData.user.name}
@@ -31,7 +32,7 @@ ${formatData.commits.length > 0 ? formatData.commits.reduce((init, item, index) 
       \t сколько добавил: ${item.added.length}
       \t сколько изменил: ${item.modified.length}
       \t сколько удалил: ${item.removed.length}
-      \t на сам посмотри: [${item.id.slice(0, 9)}](${item.url})
+      \t на сам посмотри: [${item.id.slice(0, 8)}](${item.url})
     ================================================
     `
 
@@ -54,8 +55,8 @@ const parserGitLabWebhook = data => messageFormatter({
 })
 
 // Git Hab
-const parserGitHabWebhook = data => messageFormatter({
-  eventName: data.event_name,
+const parserGitHabWebhook = (data, eventName) => messageFormatter({
+  eventName,
   user: {
     name: data.user_name,
   },
@@ -64,16 +65,21 @@ const parserGitHabWebhook = data => messageFormatter({
     url: data.repository.url,
   },
   commits: data.commits,
-  sshUrl: data.repository.git_ssh_url
+  sshUrl: data.repository.ssh_url
 })
 
 const textController = async (req, res) => {
-  const { body, headers, header } = req
+  const { body, headers } = req
   let telegramStatus
   let telegramError
 
   try {
-    await sendMessageFetch(parserGitLabWebhook(body))
+
+    if (headers['user-agent'].includes('GitHub-Hookshot')) {
+      await sendMessageFetch(parserGitHabWebhook(body, headers['x-github-event']))
+    } else {
+      await sendMessageFetch(parserGitLabWebhook(body))
+    }
 
     telegramStatus = 'ok'
   } catch (error) {
